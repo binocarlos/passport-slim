@@ -1,0 +1,60 @@
+version: '2'
+services:
+  redis:
+    image: redis
+    container_name: passport_slim_redis
+  mongo:
+    image: mongo
+    container_name: passport_slim_mongo
+  router:
+    image: binocarlos/noxy
+    container_name: passport_slim_router
+    ports:
+      - "8000:80"
+    links:
+      - frontend:frontend
+      - auth:auth
+    environment:
+      NOXY_AUTH_FRONT: /auth/v1
+      NOXY_AUTH_HOST: auth
+      NOXY_DEFAULT_HOST: frontend
+  auth:
+    build:
+      context: ./
+    container_name: passport_slim_auth
+    links:
+      - redis:redis
+      - userstorage:userstorage
+    environment:
+      MOUNTPATH: /auth/v1
+      REDIS_SERVICE_HOST: redis
+      STORAGE_SERVICE_HOST: userstorage
+      STORAGE_SERVICE_PATH: /userstorage/v1
+      EMAIL_FIELD: 1
+      COOKIE_SECRET: apples
+  userstorage:
+    image: binocarlos/passport-slim-instant-mongo
+    container_name: passport_slim_userstorage
+    links:
+      - storage:storage
+    environment:
+      MOUNTPATH: /userstorage/v1
+      STORAGE_SERVICE_HOST: storage
+      STORAGE_SERVICE_PATH: /api/v1/users
+  storage:
+    image: binocarlos/instant-mongo-rest
+    container_name: passport_slim_storage
+    links:
+      - mongo:mongo
+    volumes:
+      - ./example/schemas:/app/src/schemas
+    environment:
+      FILE: /app/src/schemas/index.js
+      MONGO_SERVICE_HOST: mongo
+      MONGO_SERVICE_DB: passport_slim_example
+  frontend:
+    build:
+      context: ./example/frontend
+    container_name: passport_slim_webserver
+    volumes:
+      - ./example/frontend/dist:/usr/share/nginx/html

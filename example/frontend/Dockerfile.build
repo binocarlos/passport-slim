@@ -1,0 +1,14 @@
+FROM node:5.2.0-slim
+MAINTAINER kaiyadavenport@gmail.com
+
+WORKDIR /app
+COPY ./package.json /app/package.json
+RUN npm install
+
+COPY ./src /app/src
+COPY ./www /app/www
+COPY ./webpack.config.js /app
+COPY ./.babelrc /app
+
+ENTRYPOINT ["npm", "run"]
+CMD ["release"]
