@@ -13,6 +13,8 @@ module.exports = function(opts){
 
   // after login and register - we need to load the user and reply
   function loadUserHandler(id, next){
+
+    console.log('loadUserHandler: ' + id)
     tools.loadUserById(opts, id, function(err, data){
       if(err){
         return next({
@@ -26,6 +28,7 @@ module.exports = function(opts){
           message:'user ' + loginres.id + ' not found'
         })
       }
+      console.dir(data)
       next(null, data)
     })
   }
@@ -70,6 +73,8 @@ module.exports = function(opts){
       loggedIn:false
     }
 
+    console.log('login: ' + JSON.stringify(req.jsonBody))
+
     async.waterfall([
 
       // first authenticate with the submitted JSON
@@ -111,6 +116,8 @@ module.exports = function(opts){
     var baseResponse = {
       registered:false
     }
+
+    console.log('register: ' + JSON.stringify(req.jsonBody))
 
     async.waterfall([
 
@@ -173,9 +180,9 @@ module.exports = function(opts){
         loginUserHandler(req, user, next)
       }
 
-    ], function(err){
+    ], function(err, data){
       if(err) return tools.errorHandler(res, err.code, err.message, baseResponse)
-      res.status(200)
+      res.status(201)
       res.json({
         registered:true,
         data:data

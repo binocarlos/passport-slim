@@ -56,6 +56,7 @@ function loadUser(opts, field, value, done) {
   }
   var url = getStorageURL(opts, '/data?' + field + '=' + encodeURIComponent(value))
 
+  console.log('load user: ' + url)
   jsonist.get(url, function(err, data, storageres) {
     if(err) return done(err)
     if(storageres.statusCode == 200){
