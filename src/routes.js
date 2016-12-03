@@ -192,12 +192,12 @@ module.exports = function(opts){
     }
 
     if(!req.user || !req.user.id){
-      return tools.errorHandler(res, 401, 'no user found', baseResponse)
+      return tools.errorHandler(res, 200, 'no user found', baseResponse)
     }
     
     tools.loadUserById(opts, req.user.id, function(err, userprofile){
       if(err) return tools.errorHandler(res, 500, err.toString(), baseResponse)
-      if(!userprofile) tools.errorHandler(res, 500, 'no user found', baseResponse)
+      if(!userprofile) tools.errorHandler(res, 200, 'no user found', baseResponse)
 
       res.json({
         loggedIn:true,

@@ -93,7 +93,7 @@ If the user is logged in - it will return `HTTP 200 - application/json`:
 }
 ```
 
-If the user is not logged in - it will return `HTTP 401 - application/json`:
+If the user is not logged in - it will return `HTTP 200 - application/json`:
 
 ```json
 {
