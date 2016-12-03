@@ -216,9 +216,11 @@ module.exports = function(opts){
 
   // clear the session
   function logout(req, res) {
-    req.logout()
-    delete req.session
-    res.redirect('/')
+
+    req.session.destroy(function () {
+      res.redirect('/')
+    })
+
   }
 
   return {
