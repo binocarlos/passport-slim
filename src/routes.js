@@ -155,7 +155,7 @@ module.exports = function(opts){
 
         postRequest(tools.getStorageURL(opts, '/create'), userBody, function(err, data, register_res){
           if(err) return next(err)
-          if(register_res.statusCode != 200 || !data.created){
+          if(register_res.statusCode >= 400 || !data.created){
             return next({
               code:register_res.statusCode,
               message:'invalid details'
