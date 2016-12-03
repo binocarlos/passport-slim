@@ -1,6 +1,6 @@
 {
   "name": "passport-slim",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A HTTP auth service using passport",
   "main": "index.js",
   "scripts": {
