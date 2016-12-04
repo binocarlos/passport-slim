@@ -1,3 +1,4 @@
+var urlparse = require('url').parse
 var async = require('async')
 var passport = require('passport')
 var jsonist = require('jsonist')
@@ -216,11 +217,10 @@ module.exports = function(opts){
 
   // clear the session
   function logout(req, res) {
-
+    var redirectTo = urlparse(req.url, true).query.redirect || '/'
     req.session.destroy(function () {
-      res.redirect('/')
+      res.redirect(redirectTo)
     })
-
   }
 
   return {
