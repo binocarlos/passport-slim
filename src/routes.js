@@ -66,7 +66,11 @@ module.exports = function(opts){
       url:url,
       body:body
     }, 'doing post request')
-    jsonist.post(url, body, function(err, data, res) {
+    jsonist.post(url, body, {
+      headers:{
+        'x-tracer-id':logger.id
+      }
+    }, function(err, data, res) {
       if(err){
         logger.error({
           error:err

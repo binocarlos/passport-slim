@@ -65,7 +65,11 @@ function loadUser(logger, opts, field, value, done) {
     value:value
   }, 'load backend user')  
   
-  jsonist.get(url, function(err, data, storageres) {
+  jsonist.get(url, {
+    headers:{
+      'x-tracer-id':logger.id
+    }
+  }, function(err, data, storageres) {
     if(err) return done(err)
     if(storageres.statusCode == 200){
       return done(null, data)
