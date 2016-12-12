@@ -48,6 +48,4 @@ var app = App(getOptions(args))
 
 // we wrap the top level removing mountpath from the url
 // this lets us use the module in other web-servers as a library
-app.listen(args.port, function () {
-  console.log('Server listening on port: ' + args.port)
-})
+app.listen(args.port)

@@ -1,11 +1,10 @@
 var express = require('express')
-var morgan = require('morgan')
 var passport = require('passport')
 var session = require('express-session')
 var cookieParser = require('cookie-parser')
 var Redis = require('ioredis')
 var RedisStore = require('connect-redis')(session)
-
+var Logger = require('./logger')
 var Routes = require('./routes')
 var tools = require('./tools')
 
@@ -19,11 +18,11 @@ module.exports = function(opts){
   })
 
   passport.deserializeUser(function(id, done) {
-    tools.loadUserById(opts, id, done)
+    tools.loadUserById(null, opts, id, done)
   })
 
   app.use(cookieParser())
-  app.use(morgan('combined'))
+  app.use(Logger())
 
   var redisConnection = new Redis({
     port: opts.redisport,

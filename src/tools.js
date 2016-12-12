@@ -1,6 +1,7 @@
 var jsonist = require('jsonist')
 var concat = require('concat-stream')
-
+var pino = require('pino')
+var generalLogger = pino()
 // slurp JSON from a HTTP request and handle parsing errors
 // we write the body to req.jsonBody and call the handler
 function slurpJSON(handler){
@@ -10,6 +11,7 @@ function slurpJSON(handler){
         body = JSON.parse(body.toString())
       }
       catch(e) {
+        req.log.error(e.toString())
         res.statusCode = 500
         res.end(e.toString())
         return
@@ -50,13 +52,19 @@ var loadUserFields = {
   username:true
 }
 
-function loadUser(opts, field, value, done) {
+function loadUser(logger, opts, field, value, done) {
   if(!loadUserFields[field]){
     return done(field + ' is not a valid user field')
   }
   var url = getStorageURL(opts, '/data?' + field + '=' + encodeURIComponent(value))
 
-  console.log('load user: ' + url)
+  logger = logger || generalLogger
+  logger.debug({
+    url:url,
+    opts:opts,
+    value:value
+  }, 'load backend user')  
+  
   jsonist.get(url, function(err, data, storageres) {
     if(err) return done(err)
     if(storageres.statusCode == 200){
@@ -69,11 +77,15 @@ function loadUser(opts, field, value, done) {
 
 }
 
-function loadUserById(opts, id, done){
-  return loadUser(opts, 'id', id, done) 
+function loadUserById(logger, opts, id, done){
+  return loadUser(logger, opts, 'id', id, done) 
 }
 
-function errorHandler(res, code, error, body){
+function errorHandler(logger, res, code, error, body){
+  logger.error({
+    code:code,
+    error:error.toString()
+  })
   body = Object.assign({}, body)
   body.error = error.toString()
   res.status(code)
