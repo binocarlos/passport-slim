@@ -13,7 +13,7 @@ function getLogOptions(opts){
     level:level,
     logLevel:level,
     genReqId:function (req) {
-      return req.headers['X-TRACER-ID']
+      return req.headers['x-tracer-id']
     }
   })
 }
@@ -22,7 +22,7 @@ module.exports = function(opts){
   var httplogger = pinoexpress(getLogOptions(opts))
   var logger = pino(getLogOptions(opts))
   return function(req, res, next){
-    var id = req.headers['X-TRACER-ID'] ? req.headers['X-TRACER-ID'] : req.headers['X-TRACER-ID'] = hat()
+    var id = req.headers['x-tracer-id'] ? req.headers['x-tracer-id'] : req.headers['x-tracer-id'] = hat()
     httplogger(req, res)
     req.log.debug({}, 'passport request: ' + req.method + ' ' + req.url)
     req.log = logger.child({

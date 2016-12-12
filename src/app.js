@@ -13,12 +13,12 @@ module.exports = function(opts){
   var app = express()
   var routes = Routes(opts)
 
-  passport.serializeUser(function(user, done) {
+  passport.serializeUser(function(req, user, done) {
     done(null, user.id)
   })
 
-  passport.deserializeUser(function(id, done) {
-    tools.loadUserById(null, opts, id, done)
+  passport.deserializeUser(function(req, id, done) {
+    tools.loadUserById(req.log, opts, id, done)
   })
 
   app.use(cookieParser())
