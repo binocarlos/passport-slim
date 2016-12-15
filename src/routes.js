@@ -47,7 +47,7 @@ module.exports = function(opts){
     }, 'doing login')
     req.login(data, function(err){
       if(err){
-        logger.error({
+        req.log.error({
           error:err
         }, 'login error')
         return next({
@@ -55,7 +55,7 @@ module.exports = function(opts){
           message:err.toString()
         })
       }
-      logger.debug(data, 'user logged in')
+      req.log.debug(data, 'user logged in')
       next(null, data)
     })
   }
